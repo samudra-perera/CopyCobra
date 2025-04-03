@@ -10,13 +10,7 @@ interface SmartCopyProps {
 }
 
 export const SmartCopy = (props: SmartCopyProps) => {
-  const {
-    apiKey,
-    fallback,
-    variants,
-    cacheKey,
-    model = "gpt-3.5-turbo",
-  } = props;
+  const { apiKey, fallback, variants, cacheKey, model } = props;
 
   const [text, setText] = useState(fallback);
 
@@ -46,11 +40,22 @@ export const SmartCopy = (props: SmartCopyProps) => {
         );
 
         const data = await res.json();
-        console.log("[CopyCobra Gemini]", data);
+        const raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (raw) {
+          let parsed: { text: string; tone: string };
 
-        const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (content) {
-          setText(content.trim());
+          try {
+            const cleaned = raw
+              .replace(/```json/g, "")
+              .replace(/```/g, "")
+              .trim();
+
+            parsed = JSON.parse(cleaned);
+            setText(parsed.text);
+          } catch (e) {
+            console.warn("Gemini returned non-JSON:", raw);
+            setText(fallback);
+          }
         } else {
           setText(fallback);
         }
