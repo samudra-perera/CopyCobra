@@ -9,14 +9,20 @@ function App() {
         fallback="Start your free trial"
         cacheKey="cta-v1"
         variants={[
-          { label: "Default", prompt: "Write a strong CTA for a free trial" },
+          {
+            label: "Default",
+            prompt: `Write one clear and strong CTA for a free trial. Respond with JSON only:
+{ "text": "Start your free trial today!", "tone": "Confident and direct" }`,
+          },
           {
             label: "Urgent",
-            prompt: "Write an urgent CTA to try a free trial",
+            prompt: `Write one urgent CTA encouraging users to start a free trial. Respond in JSON:
+{ "text": "Act now — free trial ends soon!", "tone": "Urgent and motivating" }`,
           },
           {
             label: "Friendly",
-            prompt: "Write a friendly CTA to start a free trial",
+            prompt: `Write one friendly and casual CTA for starting a free trial. Output only:
+{ "text": "Give it a shot – it’s free!", "tone": "Casual and inviting" }`,
           },
         ]}
       />
