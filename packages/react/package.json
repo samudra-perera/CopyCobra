@@ -1,0 +1,21 @@
+{
+  "name": "@copycobra/react",
+  "version": "0.1.0",
+  "main": "dist/SmartCopy.js",
+  "types": "dist/SmartCopy.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/SmartCopy.js",
+      "types": "./dist/SmartCopy.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@copycobra/core": "*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}
