@@ -1,72 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { chooseVariant, Variant } from "@copycobra/core";
+import { Variant, chooseVariant, callModelProvider } from "@copycobra/core";
+import { useCopyCobraConfig } from "./CopyCobraProvider";
 
 interface SmartCopyProps {
-  apiKey: string;
+  provider?: "gemini" | "openai";
   fallback: string;
   variants: Variant[];
   cacheKey: string;
-  model?: string;
+  selectedVariant?: string;
 }
 
-export const SmartCopy = (props: SmartCopyProps) => {
-  const { apiKey, fallback, variants, cacheKey, model } = props;
-
+export const SmartCopy = ({
+  fallback,
+  variants,
+  cacheKey,
+  selectedVariant,
+  provider,
+}: SmartCopyProps) => {
   const [text, setText] = useState(fallback);
+  const { provider: defaultProvider, apiKeys } = useCopyCobraConfig();
+  const finalProvider = provider || defaultProvider;
 
   useEffect(() => {
-    const variant = chooseVariant(variants, cacheKey);
+    const variant =
+      variants.find((v) => v.label === selectedVariant) ||
+      chooseVariant(variants, cacheKey);
 
     const fetchAIText = async () => {
       try {
-        const variant = chooseVariant(variants, cacheKey);
-
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              contents: [
-                {
-                  role: "user",
-                  parts: [{ text: variant.prompt }],
-                },
-              ],
-            }),
-          },
+        const response = await callModelProvider(
+          finalProvider,
+          variant.prompt,
+          apiKeys[finalProvider]!,
         );
 
-        const data = await res.json();
-        const raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (raw) {
-          let parsed: { text: string; tone: string };
-
-          try {
-            const cleaned = raw
-              .replace(/```json/g, "")
-              .replace(/```/g, "")
-              .trim();
-
-            parsed = JSON.parse(cleaned);
-            setText(parsed.text);
-          } catch (e) {
-            console.warn("Gemini returned non-JSON:", raw);
-            setText(fallback);
-          }
+        if (response?.text) {
+          setText(response.text);
         } else {
           setText(fallback);
         }
       } catch (err) {
-        console.warn("[CopyCobra Gemini Error]", err);
+        console.warn("[CopyCobra Error]", err);
         setText(fallback);
       }
     };
 
     fetchAIText();
-  }, [apiKey, variants, cacheKey, model]);
+  }, [finalProvider, apiKeys, selectedVariant, variants, cacheKey]);
 
   return <span>{text}</span>;
 };
