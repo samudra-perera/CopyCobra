@@ -1,8 +1,13 @@
+import { buildPrompt } from "../utils/promptBuilder";
+import type { Variant } from "../types/variant";
+
 export async function callModelProvider(
   provider: "gemini" | "openai",
-  prompt: string,
+  variant: Variant,
   apiKey: string,
 ): Promise<{ text: string; tone?: string } | null> {
+  const prompt = buildPrompt(variant);
+
   if (provider === "gemini") {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`,
