@@ -13,24 +13,26 @@ function App() {
     >
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
         <h1>CopyCobra Playground</h1>
+
         <SmartCopy
+          cacheKey="cta-hero"
           fallback="Start your free trial"
-          cacheKey="cta-v1"
+          selectedVariant="Confident"
           variants={[
             {
-              label: "Default",
-              prompt: `Write one clear and strong CTA for a free trial. Respond with JSON only:
-{ "text": "Start your free trial today!", "tone": "Confident and direct" }`,
-            },
-            {
-              label: "Urgent",
-              prompt: `Write one urgent CTA encouraging users to start a free trial. Respond in JSON:
-{ "text": "Act now — free trial ends soon!", "tone": "Urgent and motivating" }`,
+              label: "Confident",
+              tone: "Confident",
+              goal: "Encourage users to start a free trial",
             },
             {
               label: "Friendly",
-              prompt: `Write one friendly and casual CTA for starting a free trial. Output only:
-{ "text": "Give it a shot – it’s free!", "tone": "Casual and inviting" }`,
+              tone: "Friendly",
+              goal: "Make trying the product feel casual and fun",
+            },
+            {
+              label: "Urgent",
+              tone: "Urgent",
+              goal: "Drive immediate signup for a limited-time offer",
             },
           ]}
         />
