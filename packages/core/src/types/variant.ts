@@ -1,5 +1,6 @@
 export interface Variant {
   label: string;
-  prompt: string;
+  tone?: string;
+  goal?: string;
   weight?: number;
 }

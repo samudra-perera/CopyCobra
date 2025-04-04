@@ -30,7 +30,7 @@ export const SmartCopy = ({
       try {
         const response = await callModelProvider(
           finalProvider,
-          variant.prompt,
+          variant,
           apiKeys[finalProvider]!,
         );
 
