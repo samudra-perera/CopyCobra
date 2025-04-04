@@ -1,6 +1,7 @@
-import { buildPrompt } from "../utils/promptBuilder";
-import type { Variant } from "../types/variant";
-import { callGemini, callOpenAI } from "./providers";
+import { buildPrompt } from "./utils/promptBuilder";
+import type { Variant } from "./types/variant";
+import { callGemini } from "./providers/gemini";
+import { callOpenAI } from "./providers/openai";
 
 export async function callModelProvider(
   provider: "gemini" | "openai",
