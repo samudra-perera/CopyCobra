@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Variant, chooseVariant, callModelProvider } from "@copycobra/core";
+import {
+  Variant,
+  chooseVariant,
+  callModelProvider,
+  registerVariant,
+} from "@copycobra/core";
 import { useCopyCobraConfig } from "./CopyCobraProvider";
 
 interface SmartCopyProps {
@@ -22,6 +27,11 @@ export const SmartCopy = ({
   const finalProvider = provider || defaultProvider;
 
   useEffect(() => {
+    // Register the variants for snapshot tracking
+    for (const variant of variants) {
+      registerVariant("default", cacheKey, variant);
+    }
+
     const variant =
       variants.find((v) => v.label === selectedVariant) ||
       chooseVariant(variants, cacheKey);
