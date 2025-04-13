@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Variant,
   chooseVariant,
@@ -25,11 +25,15 @@ export const SmartCopy = ({
   const [text, setText] = useState(fallback);
   const { provider: defaultProvider, apiKeys } = useCopyCobraConfig();
   const finalProvider = provider || defaultProvider;
+  const hasRegistered = useRef(false);
 
   useEffect(() => {
-    // Register the variants for snapshot tracking
-    for (const variant of variants) {
-      registerVariant("default", cacheKey, variant);
+    if (!hasRegistered.current) {
+      console.log("🚀 SmartCopy registering variants for:", cacheKey); // ✅ log once per mount
+      for (const variant of variants) {
+        registerVariant("default", cacheKey, variant);
+      }
+      hasRegistered.current = true;
     }
 
     const variant =

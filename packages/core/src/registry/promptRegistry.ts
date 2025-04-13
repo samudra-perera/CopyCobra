@@ -1,29 +1,29 @@
 import { Variant } from "../types/variant";
 import { PromptGroup } from "../types/prompt-group";
 
-type RegisteredVariant = {
-  cacheKey: string;
-  groupId: string;
-  variant: Variant;
-};
-
-const registry = new Set<RegisteredVariant>();
+const promptGroups: Record<string, PromptGroup> = {};
+const registeredKeys = new Set<string>();
 
 export function registerVariant(
   groupId: string,
   cacheKey: string,
   variant: Variant,
 ) {
-  registry.add({ groupId, cacheKey, variant });
+  const hashKey = `${groupId}::${cacheKey}::${variant.label}::${variant.goal ?? ""}::${variant.tone ?? ""}`;
+
+  if (registeredKeys.has(hashKey)) return;
+
+  console.log("✅ REGISTERING:", hashKey);
+
+  registeredKeys.add(hashKey);
+
+  if (!promptGroups[groupId]) {
+    promptGroups[groupId] = { id: groupId, variants: [] };
+  }
+
+  promptGroups[groupId].variants.push({ cacheKey, variant });
 }
 
 export function getPromptGroup(): Record<string, PromptGroup> {
-  const promptGroups: Record<string, PromptGroup> = {};
-  registry.forEach(({ groupId, cacheKey, variant }) => {
-    if (!promptGroups[groupId]) {
-      promptGroups[groupId] = { id: groupId, variants: [] };
-    }
-    promptGroups[groupId].variants.push({ cacheKey, variant });
-  });
   return promptGroups;
 }
