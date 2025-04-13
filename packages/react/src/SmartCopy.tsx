@@ -29,11 +29,21 @@ export const SmartCopy = ({
 
   useEffect(() => {
     if (!hasRegistered.current) {
-      console.log("🚀 SmartCopy registering variants for:", cacheKey); // ✅ log once per mount
+      console.log("SmartCopy registering variants for:", cacheKey);
       for (const variant of variants) {
         registerVariant("default", cacheKey, variant);
       }
       hasRegistered.current = true;
+    }
+
+    const isDevEnv =
+      import.meta.env.MODE === "development" ||
+      import.meta.env.VITE_COPYCOBRA_MODE === "dev";
+
+    if (isDevEnv) {
+      console.log("Skipping AI call in dev mode:", cacheKey);
+      setText(fallback);
+      return;
     }
 
     const variant =
