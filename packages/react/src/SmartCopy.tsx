@@ -22,6 +22,8 @@ export const SmartCopy = ({
   selectedVariant,
   provider,
 }: SmartCopyProps) => {
+  console.log("🟢 SmartCopy mounted");
+
   const [text, setText] = useState(fallback);
   const { provider: defaultProvider, apiKeys } = useCopyCobraConfig();
   const finalProvider = provider || defaultProvider;
@@ -36,9 +38,15 @@ export const SmartCopy = ({
       hasRegistered.current = true;
     }
 
+    console.log("🧪 process.env.NODE_ENV:", process.env.NODE_ENV);
+    console.log(
+      "🧪 process.env.VITE_COPYCOBRA_MODE:",
+      process.env.VITE_COPYCOBRA_MODE,
+    );
+
     const isDevEnv =
-      import.meta.env.MODE === "development" ||
-      import.meta.env.VITE_COPYCOBRA_MODE === "dev";
+      process.env.NODE_ENV === "development" ||
+      process.env.VITE_COPYCOBRA_MODE === "dev";
 
     if (isDevEnv) {
       console.log("Skipping AI call in dev mode:", cacheKey);
