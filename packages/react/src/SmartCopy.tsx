@@ -22,18 +22,27 @@ export const SmartCopy = ({
   selectedVariant,
   provider,
 }: SmartCopyProps) => {
+  console.log("🟢 SmartCopy mounted");
+
   const [text, setText] = useState(fallback);
-  const { provider: defaultProvider, apiKeys } = useCopyCobraConfig();
+  const { provider: defaultProvider, apiKeys, mode } = useCopyCobraConfig();
   const finalProvider = provider || defaultProvider;
   const hasRegistered = useRef(false);
+  const isDev = mode === "dev";
 
   useEffect(() => {
     if (!hasRegistered.current) {
-      console.log("🚀 SmartCopy registering variants for:", cacheKey); // ✅ log once per mount
+      console.log("SmartCopy registering variants for:", cacheKey);
       for (const variant of variants) {
         registerVariant("default", cacheKey, variant);
       }
       hasRegistered.current = true;
+    }
+
+    if (isDev) {
+      console.log("Skipping AI call in dev mode:", cacheKey);
+      setText(fallback);
+      return;
     }
 
     const variant =

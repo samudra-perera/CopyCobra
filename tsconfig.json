@@ -1,4 +1,12 @@
 {
   "files": [],
-  "references": [{ "path": "packages/core" }, { "path": "packages/react" }]
+  "references": [{ "path": "packages/core" }, { "path": "packages/react" }],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@copycobra/core": ["packages/core/src"],
+      "@copycobra/react": ["packages/react/src"]
+    }
+  }
 }
