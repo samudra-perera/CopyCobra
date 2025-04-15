@@ -19,6 +19,7 @@ function App() {
           gemini: import.meta.env.VITE_GEMINI_API_KEY,
           openai: import.meta.env.VITE_OPENAI_API_KEY,
         },
+        mode: import.meta.env.MODE === "development" ? "dev" : "prod",
       }}
     >
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
